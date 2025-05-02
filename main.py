@@ -69,46 +69,63 @@ class cookie_clicker:
             return True
         except:
             return False
-        
+    
+    #function that plays the game    
     def play(self)->None:
         start = time.time()
+        #while the time running the game doesn't exceed the max time set by the user
         while(time.time()-start<self.max_time):
+            #tries to click on a golden cookie
             try:
                 golden = self.driver.find_element(By.CSS_SELECTOR, '.shimmer')
                 golden.click()
             except:
                 pass
+            #always click the cookie
             self.cookie.click()
+            #get the number of cookies
             self.cookies = int(self.driver.find_element(By.ID, 'cookies').text.split()[0].replace(',', ''))
+            #if haven't bought any cursors upgrades yet, buy them first
             if self.up_cursors==0:
+                #it requires at least one cursor to buy the first upgrade
                 if self.cursors==0:
                     self.buy_cursors()
                 elif self.buy_upgrade():
                     self.up_cursors+=1
+            #let's buy some more cursors
             elif self.cursors<=5:
                 self.buy_cursors()
+            #buying the second cursor upgrade (best option because it doubles the cookies by click)
             elif self.up_cursors<2:
                 if self.buy_upgrade():
                     self.up_cursors+=1
+            #buying the first grandma to enable the upgrade
             elif self.grandmas==0:
                 self.buy_grandma()
+            #buying the first grandma upgrade (best option because it doubles the cookies by grandma)
             elif self.up_grandmas==0:
                 if self.buy_upgrade():
                     self.up_grandmas+=1
+            #buying more grandmas
             elif self.up_cursors>=2 and self.grandmas<=3 and self.up_grandmas>0:
                 self.buy_grandma()
             else:
+                #the most optimal option is to have around 10 cursors and 10 grandmas in the early game
                 if self.cursors<=10:
                     self.buy_cursors()
-                elif self.grandmas<=5:
+                elif self.grandmas<=10:
                     self.buy_grandma()
-                elif self.buy_upgrade():
-                    self.up_grandmas+=1
+                #after all that, keeps buying upgrades when available
+                else:
+                    self.buy_upgrade()
+    #function to get the stats of the game
     def get_stats(self)->None:
         stats_button = self.driver.find_element(By.ID, 'statsButton')
         stats_button.click()
         information = self.driver.find_elements(By.CLASS_NAME, 'listing')
-        print(information[1].text)
+        for i in range(5):
+            print(information[i].text)
+    #function to close the game
     def quit_game(self)->None:
         self.driver.quit()
         print("Game closed")
