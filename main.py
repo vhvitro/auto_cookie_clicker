@@ -21,7 +21,7 @@ class cookie_clicker:
     def initialize(self)->None:
         self.max_time = int(input("Enter the time in seconds to run the script: "))
         bakery_name = str(input("Enter the bakers name: "))
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
         self.driver.get("https://orteil.dashnet.org/cookieclicker/")
         self.driver.maximize_window()
         language_selected = False
