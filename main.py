@@ -22,7 +22,7 @@ class cookie_clicker:
     #function to initialize the game
     def initialize(self)->None:
         self.max_time = int(input("Enter the time in seconds to run the script: "))
-        bakery_name = str(input("Enter the bakers name: "))
+        bakery_name = str(input("Enter the baker's name: "))
         self.driver = webdriver.Chrome()
         self.driver.get("https://orteil.dashnet.org/cookieclicker/")
         self.driver.maximize_window()
@@ -64,7 +64,7 @@ class cookie_clicker:
             self.grandmas+=1
     
     def buy_farm(self)->None:
-        if self.cookies>=round(1100*((1.15)**self.grandmas)):
+        if self.cookies>=round(1100*((1.15)**self.farms)):
             product2 = self.driver.find_element(By.ID, 'product2')
             product2.click()
             self.farms+=1
@@ -124,6 +124,16 @@ class cookie_clicker:
                 elif self.grandmas<=10:
                     self.buy_grandma()
                 #after all that, keeps buying upgrades when available
+                elif self.farms==0:
+                    self.buy_farm()
+                elif self.up_grandmas<2:
+                    if self.buy_upgrade():
+                        self.up_grandmas+=1
+                elif self.farms<3:
+                    self.buy_farm()
+                elif self.up_cursors<3:
+                    if self.buy_upgrade():
+                        self.up_cursors+=1
                 else:
                     self.buy_farm()
     #function to get the stats of the game
