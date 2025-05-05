@@ -16,6 +16,8 @@ class cookie_clicker:
         self.up_cursors = 0
         self.grandmas = 0
         self.up_grandmas = 0
+        self.farms = 0
+        self.up_farms = 0
 
     #function to initialize the game
     def initialize(self)->None:
@@ -60,6 +62,12 @@ class cookie_clicker:
             product1 = self.driver.find_element(By.ID, 'product1')
             product1.click()
             self.grandmas+=1
+    
+    def buy_farm(self)->None:
+        if self.cookies>=round(1100*((1.15)**self.grandmas)):
+            product2 = self.driver.find_element(By.ID, 'product2')
+            product2.click()
+            self.farms+=1
     
     #function to buy the first upgrade available        
     def buy_upgrade(self)->bool:
@@ -117,7 +125,7 @@ class cookie_clicker:
                     self.buy_grandma()
                 #after all that, keeps buying upgrades when available
                 else:
-                    self.buy_upgrade()
+                    self.buy_farm()
     #function to get the stats of the game
     def get_stats(self)->None:
         stats_button = self.driver.find_element(By.ID, 'statsButton')
