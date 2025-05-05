@@ -121,9 +121,9 @@ class cookie_clicker:
                 self.buy_grandma()
             else:
                 #the most optimal option is to have around 10 cursors and 10 grandmas in the early game
-                if self.cursors<=10:
+                if self.cursors<10:
                     self.buy_cursors()
-                elif self.grandmas<=10:
+                elif self.grandmas<10:
                     self.buy_grandma()
                 #after all that, keeps buying upgrades when available
                 elif self.farms==0:
