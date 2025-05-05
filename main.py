@@ -64,6 +64,7 @@ class cookie_clicker:
             product1.click()
             self.grandmas+=1
     
+    #function to buy farms when cookies>=1100*(1.15^grandmas) -> math function by which the price is calculated 
     def buy_farm(self)->None:
         if self.cookies>=round(1100*((1.15)**self.farms)):
             product2 = self.driver.find_element(By.ID, 'product2')
