@@ -12,6 +12,7 @@ class cookie_clicker:
     def set_initial_variables(self)->None:
         self.max_time = 0
         self.cookies = 0
+        self.golden_cookies = 0
         self.cursors = 0
         self.up_cursors = 0
         self.grandmas = 0
@@ -85,8 +86,9 @@ class cookie_clicker:
         while(time.time()-start<self.max_time):
             #tries to click on a golden cookie
             try:
-                golden = self.driver.find_element(By.CSS_SELECTOR, '.shimmer')
+                golden = self.driver.find_element(By.CLASS_NAME, 'shimmer')
                 golden.click()
+                self.golden_cookies+=1
             except:
                 pass
             #always click the cookie
@@ -143,6 +145,7 @@ class cookie_clicker:
         information = self.driver.find_elements(By.CLASS_NAME, 'listing')
         for i in range(5):
             print(information[i].text)
+        print(f'Golden cookies clicked: {self.golden_cookies}')
     #function to close the game
     def quit_game(self)->None:
         self.driver.quit()
