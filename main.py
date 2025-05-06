@@ -11,6 +11,7 @@ class cookie_clicker:
     
     #function to initialize variables
     def set_initial_variables(self)->None:
+        self.start = 0
         self.max_time = 0
         self.cookies = 0
         self.golden_cookies = 0
