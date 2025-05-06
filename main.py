@@ -1,4 +1,5 @@
 import time
+import threading
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -79,22 +80,21 @@ class cookie_clicker:
             return True
         except:
             return False
-    
-    #function that plays the game    
-    def play(self)->None:
-        start = time.time()
-        #while the time running the game doesn't exceed the max time set by the user
-        while(time.time()-start<self.max_time):
-            #tries to click on a golden cookie
+        
+    #function to click cookies and try to click golden cookies
+    def clicking(self)->None:
+        while(time.time()-self.start<self.max_time):
             try:
                 golden = self.driver.find_element(By.CLASS_NAME, 'shimmer')
                 golden.click()
                 self.golden_cookies+=1
             except:
                 pass
-            #always click the cookie
-            self.cookie.click()
-            #get the number of cookies
+            self.cookie.click()   
+    
+    #function to follow the strategy
+    def do_strategy(self)->None:
+        while(time.time()-self.start<self.max_time):
             self.cookies = int(self.driver.find_element(By.ID, 'cookies').text.split()[0].replace(',', ''))
             #if haven't bought any cursors upgrades yet, buy them first
             if self.up_cursors==0:
@@ -103,13 +103,13 @@ class cookie_clicker:
                     self.buy_cursors()
                 elif self.buy_upgrade():
                     self.up_cursors+=1
-            #let's buy some more cursors
-            elif self.cursors<=5:
-                self.buy_cursors()
             #buying the second cursor upgrade (best option because it doubles the cookies by click)
             elif self.up_cursors<2:
                 if self.buy_upgrade():
                     self.up_cursors+=1
+            #let's buy some more cursors
+            elif self.cursors<5 and self.up_cursors==2:
+                self.buy_cursors()
             #buying the first grandma to enable the upgrade
             elif self.grandmas==0:
                 self.buy_grandma()
@@ -139,6 +139,18 @@ class cookie_clicker:
                         self.up_cursors+=1
                 else:
                     self.buy_farm()
+            
+    #function that plays the game    
+    def play(self)->None:
+        self.start = time.time()
+        #while the time running the game doesn't exceed the max time set by the user
+        click = threading.Thread(target=self.clicking)
+        buy = threading.Thread(target=self.do_strategy)
+        click.start()
+        buy.start()
+        click.join()
+        buy.join()
+        
     #function to get the stats of the game
     def get_stats(self)->None:
         stats_button = self.driver.find_element(By.ID, 'statsButton')
