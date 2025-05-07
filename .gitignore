@@ -1,5 +1,7 @@
 # Tests folder
 learning_selenium
+# Log file
+log.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

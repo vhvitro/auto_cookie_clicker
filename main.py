@@ -3,7 +3,7 @@ from datetime import datetime
 import threading
 from tempfile import mkstemp
 from shutil import move
-from os import fdopen, remove
+from os import fdopen, remove, path
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -17,7 +17,7 @@ class cookie_clicker:
     def set_initial_variables(self)->None:
         self.log = 'log.txt'
         self.session_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.stats = f'Sesao criada em {self.session_time}:\n\n'
+        self.stats = f'Sesao criada em {self.session_time}:\n'
         self.start = 0
         self.max_time = 0
         self.cookies = 0
@@ -164,9 +164,10 @@ class cookie_clicker:
         stats_button = self.driver.find_element(By.ID, 'statsButton')
         stats_button.click()
         information = self.driver.find_elements(By.CLASS_NAME, 'listing')
+        self.stats+='-'*40+'\n'
         for i in range(5):
             self.stats+=f'{information[i].text}\n'
-        self.stats+=f'Golden cookies clicked: {self.golden_cookies}\n'+'-'*40+'\n'
+        self.stats+=f'Golden cookies clicked: {self.golden_cookies}\n'+'-'*40+'\n\n'
 
 
     #function to close the game
@@ -174,7 +175,10 @@ class cookie_clicker:
         self.driver.quit()
         print("Game closed")
 
+    #function to create the log file, which contains info about the match
     def add_log(self):
+        if not path.exists(self.log):
+            open(self.log, 'w').close()
         fd, temp_path = mkstemp()
         with fdopen(fd, 'w') as temp_file:
             temp_file.write(self.stats)
