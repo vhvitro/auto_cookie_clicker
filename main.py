@@ -1,5 +1,9 @@
 import time
+from datetime import datetime
 import threading
+from tempfile import mkstemp
+from shutil import move
+from os import fdopen, remove
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -11,6 +15,9 @@ class cookie_clicker:
     
     #function to initialize variables
     def set_initial_variables(self)->None:
+        self.log = 'log.txt'
+        self.session_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.stats = f'Sesao criada em {self.session_time}:\n\n'
         self.start = 0
         self.max_time = 0
         self.cookies = 0
@@ -158,15 +165,27 @@ class cookie_clicker:
         stats_button.click()
         information = self.driver.find_elements(By.CLASS_NAME, 'listing')
         for i in range(5):
-            print(information[i].text)
-        print(f'Golden cookies clicked: {self.golden_cookies}')
+            self.stats+=f'{information[i].text}\n'
+        self.stats+=f'Golden cookies clicked: {self.golden_cookies}\n'+'-'*40+'\n'
+
+
     #function to close the game
     def quit_game(self)->None:
         self.driver.quit()
         print("Game closed")
+
+    def add_log(self):
+        fd, temp_path = mkstemp()
+        with fdopen(fd, 'w') as temp_file:
+            temp_file.write(self.stats)
+            with open(self.log, 'r') as old_file:
+                temp_file.write(old_file.read())
+        remove(self.log)
+        move(temp_path, self.log)
         
 if __name__ == '__main__':
     bot = cookie_clicker()
     bot.play()
     bot.get_stats()
+    bot.add_log()
     bot.quit_game()
