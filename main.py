@@ -176,7 +176,7 @@ class cookie_clicker:
         print("Game closed")
 
     #function to create the log file, which contains info about the match
-    def add_log(self):
+    def add_log(self)->None:
         if not path.exists(self.log):
             open(self.log, 'w').close()
         fd, temp_path = mkstemp()
